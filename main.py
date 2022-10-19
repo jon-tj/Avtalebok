@@ -18,6 +18,11 @@ class Avtale:
         if(len(self.personer)>1): result+=" og "+self.personer[-1]
         return result
 
+def skrivAvtaleListe(avtaler,overskrift=""):
+    if(not overskrift==""): print("_____"+overskrift+"_____")
+    for i in range(len(avtaler)):
+        print(f"\t{i}   {avtaler[i].tittel}" )
+
 #region get input functions
 def tryint(prompt):
     try:
@@ -45,12 +50,6 @@ def trytime(prompt):
         return 0
 #endregion
 
-
-def skrivAvtaleListe(avtaler,overskrift=""):
-    if(not overskrift==""): print("_____"+overskrift+"_____")
-    for i in range(len(avtaler)):
-        print(f"\t{i}   {avtaler[i].tittel}" )        
-
 #region Create/edit
 def _lagAvtale():
     avtaleListe.append(lagAvtale())
@@ -69,6 +68,7 @@ def velgAvtale():
         return 0
     if(i>=len(avtaleListe)):
         return len(avtaleListe)-1
+    return i
 def _endreAvtale(i=-1):
     if i==-1: i=velgAvtale()
     if i==-1: return
@@ -162,7 +162,7 @@ def søkAvtaler(avtaleListe,condition):
 #endregion
 
 def meny():
-    print("Avtaleboka mi:")
+    print(f"Avtaleboka mi: ({len(avtaleListe)})")
     if(len(avtaleListe)==0): print("\tDu har ikke lagd noen avtaler enda.")
     else: skrivAvtaleListe(avtaleListe)
     handlinger=["Lag ny avtale",
@@ -190,4 +190,5 @@ def meny():
 avtaleListe=[]
 if __name__=="__main__":
     meny()
+    
     
