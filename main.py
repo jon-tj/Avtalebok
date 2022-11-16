@@ -57,6 +57,15 @@ def trytime(prompt):
         print("Verdien du skrev inn kunne ikke leses som en dato.")
         if(input("Prøv igjen? [y/n]: ").lower()[0]=="y"): return trydate(prompt)
         return 0
+def velgsted(i=-1):
+    if i==-1: skrivUtListe(mineSteder,lambda s:(s.id+": "+s.navn),"Mine steder: ")
+    try:
+        i=input("Velg et sted du vil bruke: ")
+        if(i>=0 and i<len(mineSteder)): return mineSteder[i]
+    except:
+        if(input("Prøv igjen? [y/n]: ").lower()[0]=="y"): return velgsted(i)
+        return mineSteder[None]
+        
 #endregion
 
 #region Create/edit
@@ -65,7 +74,7 @@ def _lagAvtale():
 
 def lagAvtale():
     print("Du skriver nå en ny avtale:")
-    return Avtale(input("Tittel: "),input("Sted: "),trydate("Dato (yyyy-mm-dd): "), trytime("Tid (hh:mm): "),tryint("Varighet (minutter): "),input('Personer: ').split(','))
+    return Avtale(input("Tittel: "),velgsted(),trydate("Dato (yyyy-mm-dd): "), trytime("Tid (hh:mm): "),tryint("Varighet (minutter): "),input('Personer: ').split(','))
 
 def velgAvtale():
     if(len(avtaleListe)==0): return -1
