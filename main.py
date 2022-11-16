@@ -18,10 +18,14 @@ class Avtale:
         if(len(self.personer)>1): result+=" og "+self.personer[-1]
         return result
 
-def skrivAvtaleListe(avtaler,overskrift=""):
+'''
+Bruk getter=lambda l:l.tittel hvis du skal printe ut avtalelister,
+bruk getter=lambda l:l.navn eller str(l) hvis du skal printe ut kategorier!
+'''
+def skrivUtListe(l,getter,overskrift=""):
     if(not overskrift==""): print("_____"+overskrift+"_____")
-    for i in range(len(avtaler)):
-        print(f"\t{i}   {avtaler[i].tittel}" )
+    for i in range(len(l)):
+        print(f"\t{i}   {getter(l[i])}" )
 
 #region get input functions
 def tryint(prompt):
@@ -153,7 +157,7 @@ def _søkAvtaler():
     a=input("Søkeord: ")
     kriterie=lambda avtale:a in (avtale.tittel+avtale.sted)
     resultater=søkAvtaler(avtaleListe,kriterie)
-    skrivAvtaleListe(resultater,f"Ditt søk ga {len(resultater)} resultater")
+    skrivUtListe(resultater,lambda r:r.tittel,f"Ditt søk ga {len(resultater)} resultater")
 def søkAvtaler(avtaleListe,condition):
     result=[]
     for avtale in avtaleListe:
@@ -164,7 +168,7 @@ def søkAvtaler(avtaleListe,condition):
 def meny():
     print(f"Avtaleboka mi: ({len(avtaleListe)})")
     if(len(avtaleListe)==0): print("\tDu har ikke lagd noen avtaler enda.")
-    else: skrivAvtaleListe(avtaleListe)
+    else: skrivUtListe(avtaleListe,lambda a:a.tittel)
     handlinger=["Lag ny avtale",
                 "Les inn avtaler fra fil",
                 "Skriv avtaler til fil",
