@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Nov 16 10:44:13 2022
+
+@author: PieHu
+"""
+
 class Kategori:
   def __init__(self,navn,id,prioritet=1):
     self.navn=navn
@@ -7,11 +14,13 @@ class Kategori:
     priorityLevels=["lav","vanlig","høy","svært høy", "det brenner på dass"] 
     return self.navn+f"(id: {self.id}, prioritet: {priorityLevels[ self.prioritet-1]})"
 
-mineKategorier=[]
+mineKategorier={}
+mineKategorier["Ikke angitt"]=Kategori(0,0,0)
 
 #Merk at id til kategori ikke trenger å være int. Dette gjør at man kan lage mer sofistikerte søk i avtaleboka seinere :)
 def lagNyKategori():
-  mineKategorier.append(Kategori(input("Navn: "), input("Id: "), int(input("Prioritet (1-5): ")) ))
+    id=input("Id: ")
+    mineKategorier[id]=Kategori(input("Navn: "), id, int(input("Prioritet (1-5): ")))
 
 '''
 Eksempelformat på kategori fil:
@@ -22,7 +31,7 @@ def lastInnKategorierFraFil(fildestinasjon):
   for i in range(len(kategorier)):
     verdi=kategorier[i].split(';')
     if(len(verdi)<2): continue #ikke last inn tomme/ufullstendige kategorier
-    mineKategorier.append(Kategori(verdi[0],verdi[1],1 if len(verdi) <3 else int(verdi[2]) ))
+    mineKategorier[verdi[1]]=Kategori(verdi[0],verdi[1],1 if len(verdi) <3 else int(verdi[2]) )
 
 def lagreKategorierTilFil(fildestinasjon):
   result=""
