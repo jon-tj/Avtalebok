@@ -2,13 +2,14 @@
 from datetime import date,time
 
 class Avtale:
-    def __init__(self,tittel, sted,dato,tid,varighet,personer):
+    def __init__(self,tittel, sted,dato,tid,varighet,personer,kategorier=[]):
         self.tittel=tittel
         self.sted=sted
         self.tid=tid
         self.dato=dato
         self.varighet=varighet
         self.personer=personer
+        self.kategorier=kategorier
     def __str__(self):
         return  self.tittel.upper()+": "+str(self.dato)+", kl "+str(self.tid)+" skal "+self.personerStreng()+" møte på "+self.sted+". Planlagt tid: "+str(self.varighet)+" minutter."
     def personerStreng(self):
@@ -17,12 +18,13 @@ class Avtale:
             result+=", "+self.personer[i]
         if(len(self.personer)>1): result+=" og "+self.personer[-1]
         return result
+    def legg_til_kategori(self,kategori):
+        self.kategorier.append(kategori)
 
 '''
-Bruk getter=lambda l:l.tittel hvis du skal printe ut avtalelister,
-bruk getter=lambda l:l.navn eller str(l) hvis du skal printe ut kategorier!
+Bruk gjerne getter=lambda l:l.tittel hvis du skal printe ut avtalelister, det ser finere ut :)
 '''
-def skrivUtListe(l,getter,overskrift=""):
+def skrivUtListe(l,getter=lambda l:str(l),overskrift=""):
     if(not overskrift==""): print("_____"+overskrift+"_____")
     for i in range(len(l)):
         print(f"\t{i}   {getter(l[i])}" )
@@ -118,14 +120,25 @@ def _avtaleDetaljer():
 #endregion
 
 #region read/write file
+'''
+Eksempel på avtaleliste fil (4 linjer mellom avtaler):
+    minAvtale,Stavanger,yyyy-mm-dd,hh:mm,varighet
+    kari,per,ole
+    møte,programmering,gruppearbeid
+    
+    nyAvtale, ...
+'''
 def _lagreAvtaleListe():
     lagreAvtaleListe(avtaleListe,input("Destinasjonsfil: "))
 def lagreAvtaleListe(avtaler,destinasjonsfil="mine avtaler.txt"):
     result=""
     for a in avtaler:
-        for p in [a.tittel, a.sted,str(a.dato),str(a.tid),str(a.varighet)]: result+=p+","
+        result+=f"{a.tittel},{a.sted},{str(a.dato)},{str(a.tid)},{str(a.varighet)}\n"
         for person in a.personer: result+=person+","
         result=result[:-1]+"\n"
+        for kategori in a.kategorier: result+=kategori+","
+        result=result[:-1]+"\n\n"
+        
     f = open(destinasjonsfil, "w")
     f.write(result)
     f.close()
@@ -137,14 +150,16 @@ def lesAvtaleListeFraFil(fil):
     tekst=f.read()
     f.close()
     avtaler=[]
-    for avtale in tekst.split('\n'):
-        args=avtale.split(',')
+    linjer=tekst.split('\n')
+    for i in range(0,len(linjer),4):
+        args=linjer[i].split(',')
         if(len(args)<4): continue
         dato=args[2].split('-')
         tid=args[3].split(':')
-        personer=args[:4]
-        avtaler.append(Avtale(args[0],args[1],date(int(dato[0]),int(dato[1]),int(dato[2])),
-                              time(int(tid[0]),int(tid[1]),int(tid[2])),int(args[4]),personer))
+        personer=linjer[i+1].split(',')
+        kategorier=linjer[i+2].split(',')
+        avtaler.append(Avtale(args[0],args[1],0 if len(dato)<3 else date(int(dato[0]),int(dato[1]),int(dato[2])),
+                              0 if len(tid)<3 else time(int(tid[0]),int(tid[1]),int(tid[2])),int(args[4]),personer,kategorier))
     return avtaler
 #endregion
 
