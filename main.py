@@ -3,7 +3,6 @@ from datetime import date,time
 from kategori import *
 from steder import *
 #from kategori import mineKategorier
-
 class Avtale:
     def __init__(self,tittel, sted,dato,tid,varighet,personer,kategorier=[]):
         self.tittel=tittel
@@ -30,6 +29,11 @@ Bruk gjerne getter=lambda l:l.tittel hvis du skal printe ut avtalelister, det se
 def skrivUtListe(l,getter=lambda l:str(l),overskrift=""):
     if(not overskrift==""): print("_____"+overskrift+"_____")
     for i in range(len(l)):
+        print(f"\t{i}   {getter(l[i])}" )
+        
+def skrivUtDictionary(l,getter=lambda l:str(l),overskrift=""):
+    if(not overskrift==""): print("_____"+overskrift+"_____")
+    for i in l:
         print(f"\t{i}   {getter(l[i])}" )
 
 #region get input functions
@@ -58,7 +62,7 @@ def trytime(prompt):
         if(input("Prøv igjen? [y/n]: ").lower()[0]=="y"): return trydate(prompt)
         return 0
 def velgsted(i=-1):
-    if i==-1: skrivUtListe(mineSteder,lambda s:(s.id+": "+s.navn),"Mine steder: ")
+    if i==-1: skrivUtDictionary(mineSteder,lambda s:s.navn,"Mine steder: ")
     try:
         i=input("Velg et sted du vil bruke: ")
         if(i>=0 and i<len(mineSteder)): return mineSteder[i]
@@ -196,6 +200,7 @@ def søkAvtaler(avtaleListe,condition):
 def _lastInnKategorierFraFil():
     fildestinasjon=input("Last inn kategorier fra fil: ")
     lastInnKategorierFraFil(fildestinasjon)
+    skrivUtDictionary(mineKategorier,lambda k:k.navn, "Mine kategorier:")
 
 def _lagreKategorierTilFil():
     fildestinasjon=input("Lagre kategorier til fil: ")
@@ -206,6 +211,7 @@ def _lagreKategorierTilFil():
 def _lastInnStederFraFil():
     fildestinasjon=input("Last inn steder fra fil: ")
     lastInnStederFraFil(fildestinasjon)
+    skrivUtDictionary(mineSteder,lambda s:s.navn, "Mine steder:")
 
 def _lagreStederTilFil():
     fildestinasjon=input("Lagre steder til fil: ")
