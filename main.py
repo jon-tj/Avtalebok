@@ -63,16 +63,26 @@ def trytime(prompt):
         return 0
 def velgsted(i=-1):
     if i==-1: skrivUtDictionary(mineSteder,lambda s:s.navn,"Mine steder: ")
-    try:
-        i=input("Velg et sted du vil bruke: ")
-        if(i>=0 and i<len(mineSteder)): return mineSteder[i]
-    except:
-        if(input("Prøv igjen? [y/n]: ").lower()[0]=="y"): return velgsted(i)
-        return mineSteder[None]
+    i=input("Velg et sted du vil bruke: ")
+    if(i in mineSteder): return mineSteder[i]
+    if(input("Prøv igjen? [y/n]: ").lower()[0]=="y"): return velgsted(1)
+    return mineSteder["Ikke angitt"]
+        
+def velgkategori(i=-1):
+    if i==-1: skrivUtDictionary(mineKategorier,lambda s:s.navn,"Mine kategorier: ")
+    i=input("Velg en kategori du vil bruke: ")
+    if(i in mineKategorier): return mineKategorier[i]
+    if(input("Prøv igjen? [y/n]: ").lower()[0]=="y"): return velgkategori(1)
+    return None
         
 #endregion
 
 #region Create/edit
+def leggTilKategori():
+    i=velgAvtale()
+    kategori=velgkategori()
+    if(kategori==None): return
+    avtaleListe[i].legg_til_kategori(kategori)
 def _lagAvtale():
     avtaleListe.append(lagAvtale())
 
@@ -186,7 +196,7 @@ def avtalerGittTittel(avtaleListe,tittel):
     return søkAvtaler(avtaleListe,lambda avtale:tittel in avtale.tittel)
 def _søkAvtaler():
     a=input("Søkeord: ")
-    kriterie=lambda avtale:a in (avtale.tittel+avtale.sted)
+    kriterie=lambda avtale:a in (avtale.tittel+str(avtale.sted))
     resultater=søkAvtaler(avtaleListe,kriterie)
     skrivUtListe(resultater,lambda r:r.tittel,f"Ditt søk ga {len(resultater)} resultater")
 def søkAvtaler(avtaleListe,condition):
@@ -241,9 +251,11 @@ def meny():
     
     #Hvis vi ikke har noen avtaler enda, er det ikke vits å vise disse handlingene til brukeren.
     if(len(avtaleListe)>0):
+        handlinger.insert(0,"Legg til kategori")
         handlinger.insert(1,"Endre avtale")
         handlinger.insert(2,"Slett avtale")
         handlinger.insert(3,"Se avtaledetaljer")
+        funksjoner.insert(0,leggTilKategori)
         funksjoner.insert(1,_endreAvtale)
         funksjoner.insert(2,_slettAvtale)
         funksjoner.insert(3,_avtaleDetaljer)
