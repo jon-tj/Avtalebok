@@ -1,7 +1,8 @@
 
 from datetime import date,time
-from sted import *
-from kategori import * 
+from kategori import *
+from steder import *
+#from kategori import mineKategorier
 
 class Avtale:
     def __init__(self,tittel, sted,dato,tid,varighet,personer,kategorier=[]):
@@ -182,16 +183,46 @@ def søkAvtaler(avtaleListe,condition):
     return result
 #endregion
 
+#region kategorier
+def _lastInnKategorierFraFil():
+    fildestinasjon=input("Last inn kategorier fra fil: ")
+    lastInnKategorierFraFil(fildestinasjon)
+
+def _lagreKategorierTilFil():
+    fildestinasjon=input("Lagre kategorier til fil: ")
+    lagreKategorierTilFil(fildestinasjon)
+#endregion
+    
+#region steder
+def _lastInnStederFraFil():
+    fildestinasjon=input("Last inn steder fra fil: ")
+    lastInnStederFraFil(fildestinasjon)
+
+def _lagreStederTilFil():
+    fildestinasjon=input("Lagre steder til fil: ")
+    lagreStederTilFil(fildestinasjon)
+#endregion
+
 def meny():
     print(f"Avtaleboka mi: ({len(avtaleListe)})")
+    print("\u001b[35m")
     if(len(avtaleListe)==0): print("\tDu har ikke lagd noen avtaler enda.")
     else: skrivUtListe(avtaleListe,lambda a:a.tittel)
-    handlinger=["Lag ny avtale",
-                "Les inn avtaler fra fil",
-                "Skriv avtaler til fil",
-                "Søk i avtaler",
+    print("\033[0m")
+    handlinger=["Lag ny avtale",                "Last inn avtaler fra fil",
+                "Lagre avtaler til fil",        "Søk i avtaler\n",
+                
+                "Last inn kategorier fra fil",  "Lagre kategorier til fil",
+                "Definer ny kategori\n",
+                
+                "Last inn steder fra fil",      "Lagre steder til fil",
+                "Definer nytt sted\n",
+                
                 "Avslutt"]
-    funksjoner=[_lagAvtale,_lesAvtaleListeFraFil,_lagreAvtaleListe,_søkAvtaler,lambda:None]
+    funksjoner=[_lagAvtale,_lesAvtaleListeFraFil,_lagreAvtaleListe,_søkAvtaler,
+                _lastInnKategorierFraFil,_lagreKategorierTilFil,lagNyKategori,
+                _lastInnStederFraFil,_lagreStederTilFil,lagNyttSted,
+                lambda:None]
     
     #Hvis vi ikke har noen avtaler enda, er det ikke vits å vise disse handlingene til brukeren.
     if(len(avtaleListe)>0):
