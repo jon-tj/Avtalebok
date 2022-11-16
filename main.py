@@ -1,7 +1,7 @@
 
 from datetime import date,time
 from kategori import *
-from steder import *
+from sted import *
 #from kategori import mineKategorier
 class Avtale:
     def __init__(self,tittel, sted,dato,tid,varighet,personer,kategorier=[]):
