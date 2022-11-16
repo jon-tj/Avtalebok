@@ -16,3 +16,12 @@ def bruker_sted():
      info = Sted(input("id: "), input("navn: "), input("gatenavn: "), input("postnummer: "), input("poststed: "))
      return info
  
+#Oppgave I
+mineSteder = []
+def lagreStedTilFil():
+  result = ""
+  for k in mineSteder:
+      result += f'({k._id};{k.navn}; {k.gatenavn};{k.postnummer};{k.poststed};\n)'
+  f = open(mineSteder, "w")
+  f.write(result)
+  f.close()
